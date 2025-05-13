@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:jre-11.0.11_9-ubuntu
+FROM amazoncorretto:11
 
 RUN apt-get update &&\ 
     apt-get install -y wget &&\
