@@ -2,48 +2,50 @@ package de.dhbw.WoPeDText2Process;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class T2PTest {
 
-    /*
-    Some Basic Utils for all T2P Tests
-    */
+  Logger logger = LoggerFactory.getLogger(T2PTest.class);
 
-    protected boolean euqualsWeakly(String exspected, String actual){
-        boolean equals=true;
-        String a= sanitizeText(exspected);
-        String b= sanitizeText(actual);
-        diff_match_patch dmp = new diff_match_patch();
-        LinkedList<diff_match_patch.Diff> x = dmp.diff_main(exspected, actual);
-        Iterator<diff_match_patch.Diff> i = x.iterator();
-        while(i.hasNext()){
-            diff_match_patch.Diff diff = i.next();
-            if(!diff.operation.equals(diff_match_patch.Operation.EQUAL))
-                equals=false;
-        }
-        if(!equals){
-            System.out.println("Actual and exscpect differ. The  following characters need to be fixed: ");
-            LinkedList<diff_match_patch.Patch> pl = dmp.patch_make(actual, exspected);
-            Iterator<diff_match_patch.Patch> k = pl.iterator();
-            while(k.hasNext()){
-                diff_match_patch.Patch patch = k.next();
-                System.out.println("Mismatch at "+patch.start1+": ");
-                System.out.println(patch.diffs.toString());
-            }
-        }
-        return equals;
+  /*
+  Some Basic Utils for all T2P Tests
+  */
+
+  protected boolean euqualsWeakly(String exspected, String actual) {
+    boolean equals = true;
+    String a = sanitizeText(exspected);
+    String b = sanitizeText(actual);
+    DiffMatchPath dmp = new DiffMatchPath();
+    LinkedList<DiffMatchPath.Diff> x = dmp.diff_main(exspected, actual);
+    Iterator<DiffMatchPath.Diff> i = x.iterator();
+    while (i.hasNext()) {
+      DiffMatchPath.Diff diff = i.next();
+      if (!diff.operation.equals(DiffMatchPath.Operation.EQUAL)) equals = false;
     }
-
-    protected static String sanitizeText(String text){
-        //get rid of tabs and newlines
-        text = text.replace("\t", "");
-        text = text.replace("\n", "");
-
-        //deal with x*space based tabs
-        while (text.contains("  ")){
-            text=text.replace("  "," ");
-        }
-        return text;
+    if (!equals) {
+      logger.info("Actual and exscpect differ. The  following characters need to be fixed: ");
+      LinkedList<DiffMatchPath.Patch> pl = dmp.patch_make(actual, exspected);
+      Iterator<DiffMatchPath.Patch> k = pl.iterator();
+      while (k.hasNext()) {
+        DiffMatchPath.Patch patch = k.next();
+        logger.info("Mismatch at " + patch.start1 + ": ");
+        logger.info(patch.diffs.toString());
+      }
     }
+    return equals;
+  }
 
+  protected static String sanitizeText(String text) {
+    // get rid of tabs and newlines
+    text = text.replace("\t", "");
+    text = text.replace("\n", "");
+
+    // deal with x*space based tabs
+    while (text.contains("  ")) {
+      text = text.replace("  ", " ");
+    }
+    return text;
+  }
 }

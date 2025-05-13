@@ -1,6 +1,4 @@
-/**
- * modified taken from https://github.com/FabianFriedrich/Text2Process
- */
+/** modified taken from https://github.com/FabianFriedrich/Text2Process */
 package de.dhbw.text2process.models.worldModel;
 
 import de.dhbw.text2process.enums.ActionLinkType;

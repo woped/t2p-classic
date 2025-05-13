@@ -56,34 +56,18 @@ This application is tailored to handle all requests from WoPeD to generate a PNM
 1. Build your own docker image with the Dockerfile.
 2. Run this image on your server.
 
-# Configuration guide
-_It is recommended to use IntelliJ IDE._
-<h3>Resolving all the dependencies</h3>
-<p>
-The next step is resolving the missing dependencies of the project. There three tasks are necessary.<br>
-First of all you need to ad the projects lib folder as library.
-This is done by clicking it with the right mouse button and choosing "Add as Library".
-It will open a new dialogue in which you need to ensure that the library is just included into the project not on a global level.<br>
-</p>
-<img src="./img/adding_libraries_intellij.PNG">
-<img src="./img/create_library.PNG">
-<p>
-The second step is to ensure, that all the third party libraries a imported by Maven.
-Therefore you need to perform a right click on the project and then do a mouseover on Maven and choose reimport from the opening submenu.
-</p>
-<img src="./img/project_maven_reimport.PNG">
-<p>
-This could take some time to finish, because the stanford models are quite large.<br>
-The third and last step is checking whether the proper jdk is used or not.
-File -> Project structure will open a new dialogue.
-Now go to the project view and check the SDK and language settings.
-</p> 
-<img src="./img/file_project_structure_intellij.PNG">
-<img src="./img/project_structure_intellij.PNG">
+# Dependencies
+This repository uses jars that are unavailable on Maven central. Hence, these jar files are stored in this repository in
+the folder `lib`. The chosen procedure was described in this [SO answer](https://stackoverflow.com/a/51647143/11711692).
 
+# Formatting
+To check the formatting of all Java files, run `mvn spotless:check`. <br>
+If formatting are identified, run `mvn spotless:apply` to automatically reformat that affected files.
+
+# Configuration guide
 <h3>Set a environment variable WORDNET_HOME</h3>
 <p>
-You need to configure a enviroment variable on your system to make sure the T2P-WebService can find the WordNet dictionary. Therefore we use WORDNET_HOME the same way you are familiar with from JAVA_HOME.
+You need to configure an environment variable on your system to make sure the T2P-WebService can find the WordNet dictionary. Therefore we use WORDNET_HOME the same way you are familiar with from JAVA_HOME.
 </p>
 <p>
 <h4>Windows example</h4>
