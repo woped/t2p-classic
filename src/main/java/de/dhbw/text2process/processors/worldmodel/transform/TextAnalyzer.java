@@ -23,6 +23,7 @@ import de.dhbw.text2process.models.worldModel.WorldModel;
 import de.dhbw.text2process.processors.petrinet.IDHandler;
 import de.dhbw.text2process.processors.worldmodel.Constants;
 import de.dhbw.text2process.processors.worldmodel.ProcessLabelGenerator;
+import de.dhbw.text2process.processors.worldmodel.WorldModelBuilder;
 import de.dhbw.text2process.processors.worldmodel.processing.ProcessingUtils;
 import de.dhbw.text2process.wrapper.WordNetFunctionality;
 import edu.mit.jwi.item.POS;
@@ -41,89 +42,65 @@ import org.slf4j.LoggerFactory;
 
 public class TextAnalyzer {
 
-  Logger logger = LoggerFactory.getLogger(TextAnalyzer.class);
+    Logger logger = LoggerFactory.getLogger(TextAnalyzer.class);
 
-  private static final int SUBJECT_ROLE_SCORE = 10;
-  private static final int OBJECT_ROLE_SCORE = 10; // for cop sentences
-  private static final int ROLE_MATCH_SCORE = 20;
-  private static final int SENTENCE_DISTANCE_PENALTY = 15;
+    private static final int SUBJECT_ROLE_SCORE = 10;
+    private static final int OBJECT_ROLE_SCORE = 10; //for cop sentences
+    private static final int ROLE_MATCH_SCORE = 20;
+    private static final int SENTENCE_DISTANCE_PENALTY = 15;
 
-  public enum AnimateType {
-    ANIMATE,
-    INANIMATE,
-    BOTH
-  };
-
-  private IDHandler dummyIDHandler;
-  private Text f_text;
-  private ArrayList<de.dhbw.text2process.processors.worldmodel.transform.AnalyzedSentence>
-      f_analyzedSentences = new ArrayList<AnalyzedSentence>();
-
-  private HashMap<SentenceWordID, SentenceWordID> f_referenceMap =
-      new HashMap<SentenceWordID, SentenceWordID>();
-
-  private WorldModel f_world = new WorldModel();
-  private Flow f_lastSplit;
-
-  /** */
-  public TextAnalyzer() {
-    dummyIDHandler = new IDHandler(1);
-  }
-
-  public void analyze(Text textToAnalyze) {
-    try {
-      T2PSentence.resetIDs();
-      f_world.clear();
-      f_analyzedSentences.clear();
-      f_text = textToAnalyze;
-      for (int i = 0; i < f_text.getSentences().size(); i++) {
-        T2PSentence s = f_text.getSentences().get(i);
-        analyzeSentence(s, i, false);
-      }
-
-      referenceResolution(); // Filters the actors
-      markerDetection(); // The sentences are analyzed individually and marked with markers if they
-      // are specially treated.
-      combineActions(); // Actors and actions are linked together
-      determineLinks(); // Actions are linked together
-      buildFlows(); // Flow is created
-
-      createFinalLabelsForActions();
-
-      if (Constants.DEBUG_FINAL_ACTIONS_RESULT) {
-        for (AnalyzedSentence s : f_analyzedSentences) {
-          PrintUtils.printExtractedActions(s);
-        }
-        for (Flow f : f_world.getFlows()) {
-          logger.info(f.toString());
-        }
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace();
+    public enum AnimateType {
+        ANIMATE,
+        INANIMATE,
+        BOTH
     }
-  }
 
-  private void createFinalLabelsForActions() {
-    List<Action> actions = f_world.getActions();
-    Iterator<Action> i = actions.iterator();
-    ProcessLabelGenerator pg = new ProcessLabelGenerator();
-    while (i.hasNext()) {
-      Action a = i.next();
-      a.setFinalLabel(pg.createTaskText(a));
+    private IDHandler dummyIDHandler;
+    private Text f_text;
+    private ArrayList<de.dhbw.text2process.processors.worldmodel.transform.AnalyzedSentence> f_analyzedSentences = new ArrayList<AnalyzedSentence>();
+
+    private HashMap<SentenceWordID, SentenceWordID> f_referenceMap = new HashMap<SentenceWordID, SentenceWordID>();
+
+    private WorldModel f_world = new WorldModel();
+    private Flow f_lastSplit;
+
+    /**
+     *
+     */
+    public TextAnalyzer() {
+        dummyIDHandler = new IDHandler(1);
     }
-  }
 
-  /** */
-  private void determineLinks() {
-    List<Action> _actions = f_world.getActions();
-    for (int i = _actions.size() - 1; i > 0; i--) {
-      for (int j = i - 1; j >= 0; j--) {
-        Action _a1 = _actions.get(i);
-        Action _a2 = _actions.get(j);
-        if (islinkable(_a1, _a2)) {
-          _a1.setLink(_a2);
-          _a1.setLinkType(determineLinkType(_a1, _a2));
-          if (Constants.DEBUG_FINAL_ACTIONS_RESULT) logger.info("Linkable: " + _a1 + " --- " + _a2);
+    public void analyze(Text textToAnalyze) {
+        try {
+            T2PSentence.resetIDs();
+            f_world.clear();
+            f_analyzedSentences.clear();
+            f_text = textToAnalyze;
+            for (int i = 0; i < f_text.getSentences().size(); i++) {
+                T2PSentence s = f_text.getSentences().get(i);
+                analyzeSentence(s, i, false);
+            }
+
+            referenceResolution(); //Filters the actors
+            markerDetection(); //The sentences are analyzed individually and marked with markers if they are specially treated.
+            combineActions(); //Actors and actions are linked together
+            determineLinks(); //Actions are linked together
+            buildFlows(); //Flow is created
+
+            createFinalLabelsForActions();
+
+
+            if (Constants.DEBUG_FINAL_ACTIONS_RESULT) {
+                for (AnalyzedSentence s : f_analyzedSentences) {
+                    PrintUtils.printExtractedActions(s);
+                }
+                for (Flow f : f_world.getFlows()) {
+                    logger.debug(f.toString());
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
       }
     }
@@ -175,9 +152,23 @@ public class TextAnalyzer {
     return ActionLinkType.NONE;
   }
 
-  private boolean islinkable(Action _a1, Action _a2) {
-    if (_a2 == null) {
-      return false;
+    /**
+     *
+     */
+    private void determineLinks() {
+        List<Action> _actions = f_world.getActions();
+        for (int i = _actions.size() - 1; i > 0; i--) {
+            for (int j = i - 1; j >= 0; j--) {
+                Action _a1 = _actions.get(i);
+                Action _a2 = _actions.get(j);
+                if (islinkable(_a1, _a2)) {
+                    _a1.setLink(_a2);
+                    _a1.setLinkType(determineLinkType(_a1, _a2));
+                    if (Constants.DEBUG_FINAL_ACTIONS_RESULT)
+                        logger.debug("Linkable: " + _a1 + " --- " + _a2);
+                }
+            }
+        }
     }
     if (_a1.getVerb().equals(_a2.getVerb())) {
       if (_a1.isNegated() != _a2.isNegated()) {
@@ -456,33 +447,70 @@ public class TextAnalyzer {
             if (_fIn.getDirection() == FlowDirection.join) {
               _fIn.setSingleObject(_da);
 
-              _fOut.setSingleObject(_da);
-              _fOut.getMultipleObjects().add(a);
-              _fOut.setType(FlowType.choice);
-            } else {
-              if (_fOut != null) {
-                _fOut.setSingleObject(a);
-              }
-              _fIn.getMultipleObjects().add(_da);
-              _fIn.setType(FlowType.choice);
-            }
-
-            // build a join in front of the link target
-            _fIn = findFlow(_link, true);
-            if (_fIn.getDirection() == FlowDirection.split) {
-              DummyAction _da2 = new DummyAction(a, dummyIDHandler);
-              f_world.addAction(_da2);
-              _fIn.getMultipleObjects().add(_da2);
-              _fIn.getMultipleObjects().remove(_link);
-              Flow _newFLow = new Flow(_base); // this will be the join
-              _newFLow.setSingleObject(_link);
-              _newFLow.getMultipleObjects().add(_da2);
-              _newFLow.getMultipleObjects().add(a);
-              _newFLow.setType(FlowType.choice);
-              _newFLow.setDirection(FlowDirection.join);
-              f_world.addFlow(_newFLow);
-            } else {
-              _fIn.getMultipleObjects().add(a);
+    //
+    private void buildFlows() {
+        f_lastSplit = null;
+        List<Action> _cameFrom = new ArrayList<Action>();
+                List<Action> _openSplit = new ArrayList<Action>();
+        for (AnalyzedSentence sentence : f_analyzedSentences) {
+            T2PSentence _base = sentence.getBaseSentence();
+            List<Action> _actions = sentence.getExtractedActions();
+            List<ConjunctionElement> _conjs = sentence.getExtractedConjunctions();
+            ArrayList<Action> _processed = new ArrayList<Action>();
+            //The flow is created by analyzing every single action in the input text by using a for loop.
+            //This means that a flow is created from every action, which is then assembled one after the other.
+            for (Action a : _actions) {
+                if (a.getLink() != null && a.getLinkType().equals(ActionLinkType.JUMP)) {
+                    logger.debug("!!!!!!!! BUILDING JUMP !!!!!!!!!!!");
+                    _cameFrom.clear();
+                    _cameFrom.add(a.getLink());
+                    clearSplit(_openSplit);
+                    a.setTransient(true);
+                    continue;//this node is not processed itself, but rather stands for the link
+                }
+                if (!_processed.contains(a)) {
+                    Flow _flow = new Flow(_base);
+                    ArrayList<Action> _conjoined = new ArrayList<Action>();
+                    DetermineConjResult _type = determineConjunctElements(_conjs, a, _conjoined, _actions);
+                    if (_conjoined.size() == 1) {
+                        handleSingleAction(_base, _flow, _conjoined.get(0), _cameFrom, _openSplit);
+                    } else {
+                        if (_cameFrom.size() > 0) {
+                            _flow.setSingleObject(_cameFrom.get(0));//effectively only for size == 1
+                        }
+                        //okay we found some links
+                        if (_type.getType().equals(ConjunctionType.OR) || _type.getType().equals(ConjunctionType.ANDOR) || ProcessingUtils.hasFrequencyAttached(_conjoined.get(0))) {
+                            createDummyStartNode(_cameFrom, _flow);
+                            FlowType _ft = _type.getType().equals(ConjunctionType.ANDOR) ? FlowType.multiChoice : FlowType.choice;
+                            buildGateway(_cameFrom, _openSplit, _base, _processed, _flow, _conjoined, _ft);
+                        } else if (_type.getType().equals(ConjunctionType.AND)) {
+                            if (_type.getStatusCode() == DLRStatusCode.ACTOR_SUBJECT) {
+                                createDummyStartNode(_cameFrom, _flow);
+                                buildGateway(_cameFrom, _openSplit, _base, _processed, _flow, _conjoined, FlowType.concurrency);
+                            } else {
+                                if (_cameFrom.size() == 1) {
+                                    //simple sequence case
+                                    handleSingleAction(_base, _flow, _conjoined.get(0), _cameFrom, _openSplit);
+                                    _processed.add(_conjoined.get(0));
+                                } else if (_cameFrom.size() > 1) {
+                                    buildJoin(_flow, _cameFrom, _conjoined.get(0));
+                                    f_world.addFlow(_flow);
+                                    _processed.add(_conjoined.get(0));
+                                } else { //camefrom.size == 0
+                                    _cameFrom.add(_conjoined.get(0));
+                                }
+                            }
+                        } else if (_type.getType().equals(ConjunctionType.MIXED)) {
+                            //we need a special handling for more than 2 activities here
+                            createDummyStartNode(_cameFrom, _flow);
+                            if (_cameFrom.size() > 1) {
+                                _flow = joinOnDummyNode(_cameFrom, _base, _flow);
+                            }
+                            handleMixedSituation(_base, _flow, _conjs, _actions, _cameFrom);
+                            _processed.addAll(_actions);
+                        }
+                    }
+                }
             }
             if (_cameFrom.contains(a)) {
               _cameFrom.remove(a);
@@ -700,9 +728,58 @@ public class TextAnalyzer {
       cameFrom.addAll(openSplit);
       clearSplit(openSplit);
     }
-    // If there is no cameFrom, it is the starting point of the Petrinet
-    if (cameFrom.size() == 0) {
-      createDummyStartNode(cameFrom, flow);
+
+    private void buildGateway(List<Action> cameFrom, List<Action> openSplit,
+                              T2PSentence base, ArrayList<Action> processed, Flow flow,
+                              ArrayList<Action> gatewayActions, FlowType type) {
+        if ("if".equals(gatewayActions.get(0).getMarker()) || "otherwise".equals(gatewayActions.get(0).getPreAdvMod()) ||
+                Constants.f_sequenceIndicators.contains(gatewayActions.get(0).getPreAdvMod())) {
+            if (!Constants.f_sequenceIndicators.contains(gatewayActions.get(0).getPreAdvMod())) {
+                openSplit.clear();
+            }
+            if (f_lastSplit != null) {
+                //adding gateway block in a sub branch of this if/else split
+                DummyAction _da = new DummyAction(gatewayActions.get(0), dummyIDHandler);
+                f_world.addAction(_da);
+                openSplit.addAll(getEnds(f_lastSplit.getMultipleObjects())); //marking all open ends
+                f_lastSplit.getMultipleObjects().add(_da);
+                cameFrom.clear();
+                cameFrom.add(_da);
+                flow.setSingleObject(_da);
+            }
+            //clear in case of an otherwise, as it is the last action
+            if ("otherwise".equals(gatewayActions.get(0).getPreAdvMod())) {
+                cameFrom.addAll(openSplit);
+                clearSplit(openSplit);
+            }
+        } else {
+            //clearing open split
+            cameFrom.addAll(openSplit);
+            clearSplit(openSplit);
+        }
+        //we need to do this with an xor
+        if (cameFrom.size() > 1) {
+            flow = joinOnDummyNode(cameFrom, base, flow);
+        }
+        flow.setMultipleObjects(gatewayActions);
+        flow.setType(type);
+        cameFrom.clear();
+        for (Action a : gatewayActions) {
+            if (!hasIncomingLink(a, ActionLinkType.JUMP)) {
+                cameFrom.add(a);
+            } else {
+                logger.debug("Left out action, due to JUMP link!");
+            }
+        }
+        //it could happen that we cleaned all branches!
+        if (cameFrom.size() == 0) {
+            DummyAction _da = new DummyAction(gatewayActions.get(0), dummyIDHandler);
+            f_world.addAction(_da);
+            flow.getMultipleObjects().add(_da);
+            cameFrom.add(_da);
+        }
+        processed.addAll(gatewayActions);
+        f_world.addFlow(flow);
     }
     if (cameFrom.size() >= 1) {
       if (cameFrom.size() > 1) {
@@ -794,18 +871,20 @@ public class TextAnalyzer {
         logger.info("Left out action, due to JUMP link!");
       }
     }
-    return _result;
-  }
 
-  /**
-   * @param a
-   * @return
-   */
-  private List<Action> getEnd(Action a) {
-    for (Flow f : f_world.getFlows()) {
-      if (f.getDirection() == FlowDirection.split) {
-        if (f.getSingleObject().equals(a)) {
-          return getEnds(f.getMultipleObjects());
+
+    /**
+     * @param multipleObjects
+     * @return
+     */
+    private List<Action> getEnds(List<Action> multipleObjects) {
+        ArrayList<Action> _result = new ArrayList<Action>();
+        for (Action a : multipleObjects) {
+            if (!hasIncomingLink(a, ActionLinkType.JUMP)) {
+                _result.addAll(getEnd(a));
+            } else {
+                logger.debug("Left out action, due to JUMP link!");
+            }
         }
       } else {
         if (f.getMultipleObjects().contains(a)) {
@@ -933,13 +1012,58 @@ public class TextAnalyzer {
       return DLRStatusCode.NOT_CONTAINED;
     }
 
-    for (Action ac : resultList) {
-      if (ac.getActorFrom() != null && ac.getActorFrom().equals(part)) {
-        return DLRStatusCode.ACTOR_SUBJECT;
-      }
-      if (ac.getObject() != null && ac.getObject().equals(part)) {
-        if (ac.getObject() instanceof Actor) {
-          return DLRStatusCode.ACTOR_OBJECT;
+    /**
+     * private Flow findFlowWithTarget(Action a, List<Flow> list) {
+     * for(Flow f:list) {
+     * if(f.getDirection() == FlowDirection.split) {
+     * if(f.getMultipleObjects().contains(a)) {
+     * return f;
+     * }
+     * }else {
+     * if(f.getSingleObject().equals(a)) {
+     * return f;
+     * }
+     * }
+     * }
+     * return null;
+     * }
+     */
+
+    private void referenceResolution() {
+        List<ExtractedObject> _toCheck = new ArrayList<ExtractedObject>(f_world.getActors());
+        _toCheck.addAll(f_world.getResources());
+        for (ExtractedObject a : _toCheck) {
+            if (a.needsResolve()) {
+                if (Constants.DEBUG_REFERENCE_RESOLUTION) logger.debug("resolving:" + a);
+                //check manual resolutions
+                SentenceWordID _swid = new SentenceWordID(a);
+                if (f_referenceMap.containsKey(_swid)) {
+                    //was resolved manually before
+                    SentenceWordID _target = f_referenceMap.get(_swid);
+                    SpecifiedElement _t = toElement(_target);
+                    a.setReference(_t);
+                    if (Constants.DEBUG_REFERENCE_RESOLUTION) logger.debug("manual resolution: " + _t);
+                } else {
+                    //an actor can point to another actor (PRP) or a whole action (DT)
+                    int _id = a.getOrigin().getID();
+                    if (_id >= 0) {
+                        if (ProcessingUtils.isActionResolutionDeterminer(a.getName())) {
+                            Action _act = findAction(_id, a);
+                            a.setReference(_act);
+                            if (Constants.DEBUG_REFERENCE_RESOLUTION) logger.debug("resolution result: " + _act);
+                        } else {
+                            AnimateType _animate = determineAnimateType(a);
+                            Action _containingAction = SearchUtils.getAction(a, f_world.getActions(a.getOrigin()));
+                            boolean _invertRoleMatch = _containingAction.getCop() != null || ProcessingUtils.isRCPronoun(a.getName());
+                            ExtractedObject _ref = findReference(_id, a, _animate, _invertRoleMatch);
+                            a.setReference(_ref);
+                            if (Constants.DEBUG_REFERENCE_RESOLUTION) logger.debug("resolution result: " + _ref);
+                        }
+                    }
+                }
+            }
+
+
         }
         return DLRStatusCode.RESOURCE;
       }
@@ -1017,22 +1141,33 @@ public class TextAnalyzer {
         }
       }
     }
-    return AnimateType.ANIMATE;
-  }
 
-  /**
-   * @param _target
-   * @return
-   */
-  private SpecifiedElement toElement(SentenceWordID _target) {
-    T2PSentence _origin = f_text.getSentence(_target.getSentenceID());
-    ArrayList<SpecifiedElement> _toCheck =
-        new ArrayList<SpecifiedElement>(f_world.getActions(_origin));
-    for (SpecifiedElement a : new ArrayList<SpecifiedElement>(_toCheck)) {
-      Action xc = ((Action) a).getXcomp();
-      if (xc != null) {
-        _toCheck.add(xc);
-      }
+    /**
+     *
+     */
+    private void combineActions() {
+        for (Action a : new ArrayList<Action>(f_world.getActions())) {
+            Action _refAction = null;
+            if (a.getActorFrom() != null && a.getActorFrom().getReference() instanceof Action) {
+                _refAction = (Action) a.getActorFrom().getReference();
+            } else if (a.getObject() != null && a.getObject().getReference() != null) {
+                if (a.getObject().getReference() instanceof Action) {
+                    _refAction = (Action) a.getObject().getReference();
+                } else {
+                    _refAction = SearchUtils.getAction(a.getObject().getReference(), f_world.getActions());
+                }
+            }
+            if (_refAction != null) {
+                if (canBeMerged(_refAction, a, false)) {
+                    if (Constants.DEBUG_MARKING) logger.debug("merging: -" + _refAction + "- and -" + a + "-");
+                    merge(_refAction, a, false);
+                } else if (canBeMerged(_refAction, a, true)) {
+                    if (Constants.DEBUG_MARKING)
+                        logger.debug("copying attributes: -" + _refAction + "- to -" + a + "-");
+                    copy(_refAction, a);
+                }
+            }
+        }
     }
     _toCheck.addAll(f_world.getActors(_origin));
     _toCheck.addAll(f_world.getResources(_origin));
@@ -1134,71 +1269,134 @@ public class TextAnalyzer {
       }
       f_world.removeAction(_mergeMe);
     }
-  }
 
-  /**
-   * @param a
-   * @param b
-   * @param onlyShareProps
-   * @return
-   */
-  private boolean canBeMerged(Action a, Action b, boolean onlyShareProps) {
-    if (onlyShareProps || (a.isNegated() == b.isNegated())) {
-      WordNetFunctionality wnf = new WordNetFunctionality();
-      if ((wnf.isWeakAction(a)) || (wnf.isWeakAction(b))) {
-        if ((a.getMarker() == null && b.getMarker() == null)
-            || a.getMarker().equals(b.getMarker())) {
-          if (a.getActorFrom() == null
-              || a.getActorFrom().needsResolve()
-              || a.getActorFrom().isMetaActor()
-              || b.getActorFrom() == null
-              || b.getActorFrom().needsResolve()
-              || b.getActorFrom().isMetaActor()) {
-            if (a.getObject() == null
-                || a.getObject().needsResolve() /*|| ProcessingUtils.isMetaActor(a.getObject())*/
-                || b.getObject() == null
-                || b.getObject().needsResolve() /*|| ProcessingUtils.isMetaActor(b.getObject())*/) {
-              return true;
+    /**
+     *
+     */
+    private void markerDetection() {
+        for (AnalyzedSentence sentence : f_analyzedSentences) {
+            T2PSentence _base = sentence.getBaseSentence();
+            Collection<TypedDependency> _deps = _base.getGrammaticalStructure().typedDependenciesCollapsed();
+            List<TypedDependency> _markers = SearchUtils.findDependency("mark", _deps);
+            for (TypedDependency td : _markers) {
+                TreeGraphNode _lookFor = td.gov();
+                Action _a = findAction(_lookFor, sentence.getExtractedActions(), _deps);
+                if (_a != null) {
+                    String _val = td.dep().value().toLowerCase();
+                    if (Constants.DEBUG_MARKING) {
+                        logger.debug("marking: " + _a + " with (marker)" + _val);
+                    }
+                    _a.setMarker(_val);
+                }
             }
-          }
+            _markers = SearchUtils.findDependency(ListUtils.getList("advmod"), _deps);
+            for (TypedDependency td : _markers) {
+                TreeGraphNode _lookFor = td.gov();
+                Action _a = findAction(_lookFor, sentence.getExtractedActions(), _deps);
+                String _val = td.dep().value().toLowerCase();
+                if (Constants.f_parallelIndicators.contains(_val)) {
+                    try {
+                        _a.setMarker("while");
+                    } catch (NullPointerException e){
+                        logger.debug("NullPointerException");
+                    }
+                } else {
+                    if (!_val.equals("also")) { // make exclusion list?
+                        if (Constants.DEBUG_MARKING)
+                            logger.debug("marking: " + _a + " with (advmod) " + _val);
+                        _a.setPreAdvMod(_val, td.dep().index());
+                    }
+                }
+            }
+            _markers = SearchUtils.findDependency("prepc", _deps); //e.g. except
+            for (TypedDependency td : _markers) {
+                TreeGraphNode _lookFor = td.dep();
+                Action _a = findAction(_lookFor, sentence.getExtractedActions(), _deps);
+                if (_a != null) {
+                    if (Constants.DEBUG_MARKING)
+                        logger.debug("marking: " + _a + " with (prepc) " + td.reln().getSpecific().toLowerCase());
+                    _a.setPrepc(td.reln().getSpecific().toLowerCase());
+                }
+            }
+            _markers = SearchUtils.findDependency("complm", _deps); //whether
+            for (TypedDependency td : _markers) {
+                if (!td.dep().value().equals("that")) {
+                    TreeGraphNode _lookFor = td.gov();
+                    Action _a = findAction(_lookFor, sentence.getExtractedActions(), _deps);
+                    if (_a != null) {
+                        String _val = td.dep().value().toLowerCase();
+                        if (Constants.f_conditionIndicators.contains(_val)) {
+                            _val = "if-complm";
+                        }
+                        if (Constants.DEBUG_MARKING)
+                            logger.debug("marking: " + _a + " with (marker-complm) " + _val);
+                        _a.setMarker(_val);
+                    }
+                }
+            }
         }
-      }
-    }
-    return false;
-  }
-
-  /** */
-  private void markerDetection() {
-    for (AnalyzedSentence sentence : f_analyzedSentences) {
-      T2PSentence _base = sentence.getBaseSentence();
-      Collection<TypedDependency> _deps =
-          _base.getGrammaticalStructure().typedDependenciesCollapsed();
-      List<TypedDependency> _markers = SearchUtils.findDependency("mark", _deps);
-      for (TypedDependency td : _markers) {
-        TreeGraphNode _lookFor = td.gov();
-        Action _a = findAction(_lookFor, sentence.getExtractedActions(), _deps);
-        if (_a != null) {
-          String _val = td.dep().value().toLowerCase();
-          logger.debug("marking: " + _a + " with (marker)" + _val);
-          _a.setMarker(_val);
+        //determination of compound indicators in PP or SBAR phrases
+        for (AnalyzedSentence sentence : f_analyzedSentences) {
+            for (Action a : f_world.getActions(sentence.getBaseSentence())) {
+                List<Specifier> _check = a.getSpecifiers(SpecifierType.PP);
+                if (a.getObject() != null) {
+                    _check.addAll(a.getObject().getSpecifiers(SpecifierType.PP));
+                }
+                _check.addAll(a.getSpecifiers(SpecifierType.RCMOD));
+                _check.addAll(a.getSpecifiers(SpecifierType.SBAR));
+                for (Specifier spec : _check) {
+                    if (SearchUtils.startsWithAny(spec.getPhrase(), Constants.f_conditionIndicators)) {
+                        if (a.getMarker() == null) {
+                            if (Constants.DEBUG_MARKING)
+                                logger.debug("marking: " + a + " with (marker) " + spec.getPhrase() + "(if)");
+                            a.setMarker("if");
+                            if (!Constants.f_conditionIndicators.contains(spec.getPhrase())) {
+                                //the indicator is just part of the whole phrase (and not the whole phrase itself)
+                                a.setMarkerFromPP(true);
+                            }
+                        }
+                    }
+                    for (String indic : Constants.f_sequenceIndicators) {
+                        if (spec.getPhrase().startsWith(indic)) {
+                            if (a.getPreAdvMod() == null) {
+                                a.setPreAdvMod(indic, spec.getWordIndex());
+                            }
+                        }
+                    }
+                    if (Constants.f_parallelIndicators.contains(spec.getPhrase())) {
+                        if (a.getMarker() == null) {
+                            if (Constants.DEBUG_MARKING)
+                                logger.debug("marking: " + a + " with (marker) " + spec.getPhrase() + "(while)");
+                            a.setMarker("while");
+                        }
+                    }
+                }
+            }
         }
-      }
-      _markers = SearchUtils.findDependency(ListUtils.getList("advmod"), _deps);
-      for (TypedDependency td : _markers) {
-        TreeGraphNode _lookFor = td.gov();
-        Action _a = findAction(_lookFor, sentence.getExtractedActions(), _deps);
-        String _val = td.dep().value().toLowerCase();
-        if (Constants.f_parallelIndicators.contains(_val)) {
-          try {
-            _a.setMarker("while");
-          } catch (NullPointerException e) {
-            logger.error("NullPointerException");
-          }
-        } else {
-          if (!_val.equals("also")) { // make exclusion list?
-            logger.debug("marking: " + _a + " with (advmod) " + _val);
-            _a.setPreAdvMod(_val, td.dep().index());
-          }
+        //now setting implicit markers (if no marker set so far)
+        String _nextMark = null;
+        List<Action> _linked = new ArrayList<Action>();
+        for (AnalyzedSentence sentence : f_analyzedSentences) {
+            _linked.clear();
+            _nextMark = null;
+            List<Action> _actions = f_world.getActions(sentence.getBaseSentence());
+            for (Action a : _actions) {
+                if (_nextMark != null) {
+                    if (a.getPreAdvMod() == null) {
+                        a.setPreAdvMod(_nextMark, -1);
+                        if (Constants.DEBUG_MARKING)
+                            logger.debug("marking: " + a + " with implicit (advmod) " + _nextMark);
+                    }
+                }
+                if (!_linked.contains(a)) {
+                    _nextMark = null;
+                }
+                if ((Constants.f_conditionIndicators.contains(a.getMarker()) && !a.isMarkerFromPP()) ||
+                        Constants.f_conditionIndicators.contains(a.getPreAdvMod())) {
+                    _nextMark = "then";
+                    determineConjunctElements(sentence.getExtractedConjunctions(), a, _linked, _actions);
+                }
+            }
         }
       }
       _markers = SearchUtils.findDependency("prepc", _deps); // e.g. except

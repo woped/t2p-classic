@@ -313,35 +313,47 @@ public class PetrinetBuilder {
       Place p = i.next();
       if (p.getOriginID().startsWith(DUMMY_PREFIX)) dummyPlaces.add(p);
     }
-    return dummyPlaces;
-  }
+    /**
+    This method creates and labels splits
+     */
+    private void createSplit(Flow f){
+        Place p1= getSourcePlaceForSplitFlow(f);
+        List<Action> splitList = f.getMultipleObjects();
+        ArrayList<Place> targetPlaces = new ArrayList<Place>();
+        Iterator<Action> i = splitList.iterator();
+        String label="";
+        while(i.hasNext()){
+            Action a = i.next();
 
-  private void removeDummyNodes() {
-    List<Place> dummyList = getAllDummyPlaces();
-    Iterator<Place> i = dummyList.iterator();
-    while (i.hasNext()) {
-      Place dummyPlace = i.next();
-      List<Arc> ingoingArcs =
-          petriNet.getAllReferencingArcsForElement(
-              dummyPlace.getID(), PetriNet.REFERENCE_DIRECTION.ingoing);
-      if (ingoingArcs.size() == 1) {
-        Transition dummyTransition =
-            (Transition) petriNet.getPetrinetElementByID(ingoingArcs.get(0).getSource());
+                if(checkIfCanBeChoiceLabel(a)){
+                    Place targetPlace = elementBuilder.createPlace(false,getOriginID(a));
+                    targetPlaces.add(targetPlace);
+                    petriNet.add(targetPlace);
+                    label="choice if "+a.getFinalLabel();
+                }
+                else{
+                    Place targetPlace = elementBuilder.createPlace(false,"");
+                    targetPlaces.add(targetPlace);
+                    petriNet.add(targetPlace);
 
-        // remove Arc between Dummy Transition + Place
-        petriNet.removePetrinetElementByID(ingoingArcs.get(0).getID());
+                    Transition t = createTransition(a,false);
+                    petriNet.add(t);
+                    Place p2= elementBuilder.createPlace(false, getOriginID(a));
+                    petriNet.add(p2);
+                    petriNet.add(elementBuilder.createArc(targetPlace.getID(),t.getID(),getOriginID(a)));
+                    petriNet.add(elementBuilder.createArc(t.getID(),p2.getID(),getOriginID(a)));
+                }
 
-        // handle n sources x m targets Situation
-        ArrayList<Transition> newTargets = new ArrayList<Transition>();
-        Iterator<Arc> ntI =
-            petriNet
-                .getAllReferencingArcsForElement(
-                    dummyPlace.getID(), PetriNet.REFERENCE_DIRECTION.outgoing)
-                .iterator();
-        while (ntI.hasNext()) {
-          Arc a = ntI.next();
-          newTargets.add((Transition) petriNet.getPetrinetElementByID(a.getTarget()));
-          petriNet.removePetrinetElementByID(a.getID());
+
+        }
+        if(f.getType().equals(FlowType.concurrency)){
+            ANDSplit as=new ANDSplit("Split concurrently",false,"",elementBuilder);
+            as.addANDSplitToPetriNet(petriNet,p1,targetPlaces);
+        }else if(f.getType().equals(FlowType.choice)||f.getType().equals(FlowType.multiChoice) ||f.getType().equals(FlowType.iteration)){
+            if(label.equals(""))
+                label= "choice";
+            XORSplit xs = new XORSplit(label,splitList.size(),"",elementBuilder);
+            xs.addXORSplitToPetriNet(petriNet,p1,targetPlaces);
         }
 
         Iterator<Arc> nsI =
