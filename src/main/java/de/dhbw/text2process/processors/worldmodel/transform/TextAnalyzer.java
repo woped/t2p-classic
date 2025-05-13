@@ -1,6 +1,18 @@
 /** modified taken from https://github.com/FabianFriedrich/Text2Process */
 package de.dhbw.text2process.processors.worldmodel.transform;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.dhbw.text2process.enums.ActionLinkType;
 import de.dhbw.text2process.enums.ConjunctionType;
 import de.dhbw.text2process.enums.DLRStatusCode;
@@ -25,19 +37,9 @@ import de.dhbw.text2process.processors.worldmodel.Constants;
 import de.dhbw.text2process.processors.worldmodel.ProcessLabelGenerator;
 import de.dhbw.text2process.processors.worldmodel.processing.ProcessingUtils;
 import de.dhbw.text2process.wrapper.WordNetFunctionality;
-import edu.mit.jwi.item.POS;
 import edu.stanford.nlp.trees.TreeGraphNode;
 import edu.stanford.nlp.trees.TypedDependency;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.didion.jwnl.data.POS;
 
 public class TextAnalyzer {
 
