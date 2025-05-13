@@ -114,20 +114,21 @@ public class TextAnalyzer {
   }
 
   /** */
-  private void determineLinks() {
-    List<Action> _actions = f_world.getActions();
-    for (int i = _actions.size() - 1; i > 0; i--) {
-      for (int j = i - 1; j >= 0; j--) {
-        Action _a1 = _actions.get(i);
-        Action _a2 = _actions.get(j);
-        if (islinkable(_a1, _a2)) {
-          _a1.setLink(_a2);
-          _a1.setLinkType(determineLinkType(_a1, _a2));
-          if (Constants.DEBUG_FINAL_ACTIONS_RESULT) logger.info("Linkable: " + _a1 + " --- " + _a2);
-        }
-      }
-    }
-  }
+  // private void determineLinks() {
+  //     List<Action> _actions = f_world.getActions();
+  //     for (int i = _actions.size() - 1; i > 0; i--) {
+  //         for (int j = i - 1; j >= 0; j--) {
+  //             Action _a1 = _actions.get(i);
+  //             Action _a2 = _actions.get(j);
+  //             if (islinkable(_a1, _a2)) {
+  //                 _a1.setLink(_a2);
+  //                 _a1.setLinkType(determineLinkType(_a1, _a2));
+  //                 if (Constants.DEBUG_FINAL_ACTIONS_RESULT)
+  //                     logger.info("Linkable: " + _a1 + " --- " + _a2);
+  //             }
+  //         }
+  //     }
+  // }
 
   /**
    * @param linkSource
@@ -173,6 +174,68 @@ public class TextAnalyzer {
       }
     }
     return ActionLinkType.NONE;
+  }
+
+  private void determineLinks() {
+    List<Action> _actions = f_world.getActions();
+    List<Action> _sequentialActions = new ArrayList<Action>();
+    for (int a = _actions.size() - 1; a > 0; a--) {
+      Action action1 = _actions.get(a);
+      if ("if".equals(action1.getMarker())) {
+        _sequentialActions.add(action1);
+        for (int b = a - 1; b >= 0; b--) {
+          Action action2 = _actions.get(b);
+          if (!"if".equals(action2.getMarker())) {
+            _sequentialActions.add(action2);
+          } else {
+            break;
+          }
+        }
+        for (int i = _sequentialActions.size() - 1; i > 0; i--) {
+          for (int j = i - 1; j >= 0; j--) {
+            Action _a1 = _actions.get(i);
+            Action _a2 = _actions.get(j);
+            if (islinkable(_a1, _a2)) {
+              _a1.setLink(_a2);
+              _a1.setLinkType(ActionLinkType.FORWARD);
+              if (Constants.DEBUG_FINAL_ACTIONS_RESULT)
+                System.out.println("Linkable: " + _a1 + " --- " + _a2);
+            }
+          }
+        }
+      }
+      for (int b = a - 1; b >= 0; b--) {
+        Action action2 = _actions.get(b);
+        if ("if".equals(action2.getMarker())) {
+          _sequentialActions.add(action2);
+          for (int c = a - 1; c >= 0; c--) {
+            Action action3 = _actions.get(c);
+            if (!"if".equals(action3.getMarker())) {
+              _sequentialActions.add(action3);
+            } else {
+              break;
+            }
+          }
+          for (int i = _sequentialActions.size() - 1; i > 0; i--) {
+            for (int j = i - 1; j >= 0; j--) {
+              Action _a1 = _actions.get(i);
+              Action _a2 = _actions.get(j);
+              if (islinkable(_a1, _a2)) {
+                _a1.setLink(_a2);
+                _a1.setLinkType(ActionLinkType.FORWARD);
+                if (Constants.DEBUG_FINAL_ACTIONS_RESULT)
+                  System.out.println("Linkable: " + _a1 + " --- " + _a2);
+              }
+            }
+          }
+        } else if (islinkable(action1, action2)) {
+          action1.setLink(action2);
+          action1.setLinkType(determineLinkType(action1, action2));
+          if (Constants.DEBUG_FINAL_ACTIONS_RESULT)
+            System.out.println("Linkable: " + action1 + " --- " + action2);
+        }
+      }
+    }
   }
 
   private boolean islinkable(Action _a1, Action _a2) {
@@ -369,8 +432,10 @@ public class TextAnalyzer {
       List<Action> _actions = sentence.getExtractedActions();
       List<ConjunctionElement> _conjs = sentence.getExtractedConjunctions();
       ArrayList<Action> _processed = new ArrayList<Action>();
-      // The flow is created by analyzing every single action in the input text by using a for loop.
-      // This means that a flow is created from every action, which is then assembled one after the
+      // The flow is created by analyzing every single action in the input text by
+      // using a for loop.
+      // This means that a flow is created from every action, which is then assembled
+      // one after the
       // other.
       for (Action a : _actions) {
         if (a.getLink() != null && a.getLinkType().equals(ActionLinkType.JUMP)) {
@@ -442,7 +507,7 @@ public class TextAnalyzer {
           // "weak" link
           if (a.getLinkType() == ActionLinkType.FORWARD) {
             List<Action> _end = getEnd(a.getLink());
-            if (_end.size() == 1 /* && _end.get(0).equals(a.getLink())*/) {
+            if (_end.size() == 1 /* && _end.get(0).equals(a.getLink()) */) {
               // was not used before already!
               _cameFrom.add(_end.get(0));
             }
@@ -689,7 +754,8 @@ public class TextAnalyzer {
    * @param openSplit
    */
   // If Commands are used to analyze how many cameFrom are present.
-  // CameFrom indicates how many flows were created in the last run by the for loop of buildFlows()
+  // CameFrom indicates how many flows were created in the last run by the for
+  // loop of buildFlows()
   private void handleSingleAction(
       T2PSentence _base, Flow flow, Action action, List<Action> cameFrom, List<Action> openSplit) {
     if (!"if".equals(action.getMarker())
@@ -1155,9 +1221,10 @@ public class TextAnalyzer {
               || b.getActorFrom().needsResolve()
               || b.getActorFrom().isMetaActor()) {
             if (a.getObject() == null
-                || a.getObject().needsResolve() /*|| ProcessingUtils.isMetaActor(a.getObject())*/
+                || a.getObject().needsResolve() /* || ProcessingUtils.isMetaActor(a.getObject()) */
                 || b.getObject() == null
-                || b.getObject().needsResolve() /*|| ProcessingUtils.isMetaActor(b.getObject())*/) {
+                || b.getObject()
+                    .needsResolve() /* || ProcessingUtils.isMetaActor(b.getObject()) */) {
               return true;
             }
           }
@@ -1241,7 +1308,8 @@ public class TextAnalyzer {
               logger.debug("marking: " + a + " with (marker) " + spec.getPhrase() + "(if)");
               a.setMarker("if");
               if (!Constants.f_conditionIndicators.contains(spec.getPhrase())) {
-                // the indicator is just part of the whole phrase (and not the whole phrase itself)
+                // the indicator is just part of the whole phrase (and not the whole phrase
+                // itself)
                 a.setMarkerFromPP(true);
               }
             }
@@ -1291,9 +1359,9 @@ public class TextAnalyzer {
       List<Action> _actions = sentence.getExtractedActions();
       for (Action a : _actions) {
         _linked = new ArrayList<Action>();
-        /*DetermineConjResult _type = */ determineConjunctElements(
+        /* DetermineConjResult _type = */ determineConjunctElements(
             sentence.getExtractedConjunctions(), a, _linked, _actions);
-        if (_linked.size() > 1 /*&& _type.getType().equals(ConjunctionType.AND)*/) {
+        if (_linked.size() > 1 /* && _type.getType().equals(ConjunctionType.AND) */) {
           // propagate preadvmod
           for (int i = 1; i < _linked.size(); i++) {
             Action _linkedAction = _linked.get(i);
@@ -1490,7 +1558,8 @@ public class TextAnalyzer {
           continue;
         }
       }
-      // getting score based on sentence distance (dist(0)=0,dist(-1)=-2,dist(-2)=-4) (at penalty=2)
+      // getting score based on sentence distance (dist(0)=0,dist(-1)=-2,dist(-2)=-4)
+      // (at penalty=2)
       Integer _score =
           ((id - resolveMe.getOrigin().getID())) * TextAnalyzer.SENTENCE_DISTANCE_PENALTY;
       if (exObj.isSubjectRole() == (cop ? !resolveMe.isSubjectRole() : resolveMe.isSubjectRole())) {

@@ -36,6 +36,8 @@ public class Action extends SpecifiedElement {
 
   private String finalLabel;
 
+  private final boolean startParallelSequence = false;
+
   public TriggerType getTriggerType() {
     return triggerType;
   }
@@ -104,6 +106,11 @@ public class Action extends SpecifiedElement {
    */
   public String getVerb() {
     return f_baseForm;
+  }
+
+  /** @return the startParallelSequence */
+  public boolean getStartParallelSequence() {
+    return startParallelSequence;
   }
 
   /** @param from the f_actorFrom to set */
