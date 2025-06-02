@@ -25,6 +25,8 @@ This application is tailored to handle all requests from WoPeD to generate a PNM
 - <a href="https://www.jetbrains.com/de-de/idea/">IntelliJ IDEA</a>
 - <a href="https://wordnet.princeton.edu/download">WordNet</a>
 
+After cloning this repository, it's essential to [set up git hooks](https://github.com/woped/woped-git-hooks/blob/main/README.md#activating-git-hooks-after-cloning-a-repository) to ensure project standards.
+
 # Testing
 ### Testing via Swagger UI
 1. Start the application.
