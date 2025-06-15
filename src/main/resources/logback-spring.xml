@@ -4,10 +4,8 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeMdcKeyName>userId</includeMdcKeyName>
-            <includeMdcKeyName>requestId</includeMdcKeyName>
-            <customFields>{"app_name":"t2p-classic-service"}</customFields>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>{"@timestamp":"%date{ISO8601}","level":"%level","message":"%msg","logger_name":"%logger","thread_name":"%thread"}%n</pattern>
         </encoder>
     </appender>
 
