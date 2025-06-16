@@ -74,7 +74,9 @@ public abstract class SpecifiedElement extends OriginatedElement
     f_specifiers.removeAll(remove);
   }
 
-  /** @param sp */
+  /**
+   * @param sp
+   */
   public void removeSpecifier(Specifier sp) {
     f_specifiers.remove(sp);
   }

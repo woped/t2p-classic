@@ -18,7 +18,9 @@ public class Actor extends ExtractedObject {
     return (f_metaActor ? "Meta-" : (f_unreal ? "Unreal-" : "")) + "Actor - " + super.toString();
   }
 
-  /** @param value */
+  /**
+   * @param value
+   */
   public void setUnreal(boolean value) {
     f_unreal = value;
   }
@@ -35,7 +37,9 @@ public class Actor extends ExtractedObject {
     return f_metaActor;
   }
 
-  /** @param value */
+  /**
+   * @param value
+   */
   public void setPassive(boolean value) {
     f_passive = value;
   }

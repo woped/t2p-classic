@@ -37,7 +37,9 @@ public abstract class ExtractedObject extends SpecifiedElement {
     return f_subjectRole;
   }
 
-  /** @param value */
+  /**
+   * @param value
+   */
   public void setResolve(boolean value) {
     f_needsResolve = value;
   }

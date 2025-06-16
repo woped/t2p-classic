@@ -6,6 +6,7 @@ public class Conversation extends FlowObject {
 
   /** Determines whether this Conversation is compound or not (1,0) */
   public static final String PROP_COMPOUND = "compound";
+
   /** Determines whether this Conversation is compound or not (1,0) */
   public static final String PROP_CALL = "call";
 

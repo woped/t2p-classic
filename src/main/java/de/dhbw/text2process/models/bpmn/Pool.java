@@ -4,6 +4,7 @@ public class Pool extends LaneableCluster {
 
   /** Property if the Pool is a Black Box Pool */
   public static final String PROP_BLACKBOX_POOL = "blackbox_pool";
+
   /** Property if this Pool has multiple instances (0=FALSE, 1=TRUE) */
   public static final String PROP_MULTI_INSTANCE = "multi_instance";
 

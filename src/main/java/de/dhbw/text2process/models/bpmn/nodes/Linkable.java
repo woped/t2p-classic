@@ -4,6 +4,8 @@ import de.dhbw.text2process.helper.ReferenceChooserRestriction;
 
 public interface Linkable {
 
-  /** @return a {@link ReferenceChooserRestriction}. */
+  /**
+   * @return a {@link ReferenceChooserRestriction}.
+   */
   public ReferenceChooserRestriction getReferenceRestrictions();
 }

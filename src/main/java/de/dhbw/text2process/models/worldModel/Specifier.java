@@ -56,7 +56,9 @@ public class Specifier extends SpecifiedElement {
     return f_headWord;
   }
 
-  /** @param pt */
+  /**
+   * @param pt
+   */
   public void setPhraseType(PhraseType pt) {
     f_pt = pt;
   }

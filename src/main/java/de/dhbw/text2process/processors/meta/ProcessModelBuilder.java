@@ -119,10 +119,14 @@ public abstract class ProcessModelBuilder {
     return null;
   }
 
-  /** @param world */
+  /**
+   * @param world
+   */
   protected abstract void processMetaActivities(WorldModel world);
 
-  /** @param world */
+  /**
+   * @param world
+   */
   protected abstract void removeDummies(WorldModel world);
 
   /**

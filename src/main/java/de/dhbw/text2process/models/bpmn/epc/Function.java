@@ -16,12 +16,16 @@ public class Function extends FlowObject {
   public static final String TYPE_RULE = "RULE";
   public static final String TYPE_USER = "USER";
   public static final String TYPE_REFERENCE = "Reference";
+
   /** Loop-Property: None */
   public static final String LOOP_NONE = "NONE";
+
   /** Loop-Property: Standard */
   public static final String LOOP_STANDARD = "STANDARD";
+
   /** Loop-Property: Multi Instance Sequence */
   public static final String LOOP_MULTI_SEQUENCE = "SEQUENCE";
+
   /** Loop-Property: Mutli Instance Parallel */
   public static final String LOOP_MULTI_PARALLEL = "PARALLEL";
 
@@ -45,12 +49,16 @@ public class Function extends FlowObject {
     initializeProperties();
   }
 
-  /** @return the advMod */
+  /**
+   * @return the advMod
+   */
   public String getAdvMod() {
     return advMod;
   }
 
-  /** @param advMod the advMod to set */
+  /**
+   * @param advMod the advMod to set
+   */
   public void setAdvMod(String advMod) {
     this.advMod = advMod;
   }

@@ -9,12 +9,16 @@ public class SubProcess extends Cluster {
 
   /** Loop-Type: "NONE, STANDARD, SEQUENCE, PARALLEL" */
   public static final String PROP_LOOP_TYPE = "loop_type";
+
   /** Transaction: 0=false 1=true */
   public static final String PROP_TRANSACTION = "transaction";
+
   /** Event-SubProcess: 0=false 1=true */
   public static final String PROP_EVENT_SUBPROCESS = "triggered_by_event";
+
   /** The property for ad-hoc sub-processes (0=FALSE,1=TRUE) */
   public static final String PROP_AD_HOC = "adhoc";
+
   // ** The property for compensation (0=FALSE;1=TRUE) */
   public static final String PROP_COMPENSATION = "compensation";
 

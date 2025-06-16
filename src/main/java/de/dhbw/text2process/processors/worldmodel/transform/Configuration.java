@@ -8,14 +8,19 @@ public class Configuration {
 
   /** The name of the config file */
   public static final String CONFIGFILE = "ProcessEditor.xml";
+
   /** The location of the external dot layouter */
   public static final String PROP_DOT_LOCATION = "DotLocation";
+
   /** The semicolon separated list of recent files */
   public static final String PROP_RECENT_FILES = "RecentFiles";
+
   /** A flag if the system look and feel should be used */
   public static final String PROP_USE_SYSTEM_LOOK_AND_FEEL = "SystemLookAndFeel";
+
   /** The instance */
   private static Configuration INSTANCE = null;
+
   /** The internal properties */
   private static Properties props = new Properties();
 

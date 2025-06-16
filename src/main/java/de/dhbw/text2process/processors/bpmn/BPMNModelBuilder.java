@@ -122,7 +122,9 @@ public class BPMNModelBuilder extends ProcessModelBuilder {
     return f_model;
   }
 
-  /** @param world */
+  /**
+   * @param world
+   */
   @Override
   public void buildDataObjects(WorldModel world) {
     // to avoid double adding
@@ -461,6 +463,7 @@ public class BPMNModelBuilder extends ProcessModelBuilder {
       }
     }
   }
+
   // BPMN exclusive
   private void checkForBBPools(Action a) {
     // candidate

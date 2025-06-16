@@ -38,32 +38,44 @@ public abstract class ProcessModel implements Cloneable, Serializable {
   public static final String ATTR_NAME = "name";
   public static final String ATTR_TYPE = "type";
   public static final String ATTR_ID = "id";
+
   /**
    * Optional attribute that references to the model that has a reference to the actual model (and
    * was used to open it)
    */
   public static final String ATTR_PARENT_REF = "parent_ref";
+
   /** A dirty flag */
   private boolean dirtyFlag = false;
+
   /** Holds the properties of the process model */
   private HashMap<String, String> properties = new HashMap<String, String>();
+
   /** Holds the transient properties of the process model */
   private transient HashMap<String, Object> transientProperties = new HashMap<String, Object>();
+
   /** List of ProcessNodes; elements should be rendered from start to end */
   private LinkedList<ProcessNode> processNodes = new LinkedList<ProcessNode>();
+
   /** List of ProcessEdge */
   private LinkedList<ProcessEdge> processEdges = new LinkedList<ProcessEdge>();
+
   /** List of Clusters */
   private LinkedList<Cluster> clusterNodes = new LinkedList<Cluster>();
+
   /** An instance of a sub-class of ProcessUtils */
   protected ProcessUtils processUtils = null;
+
   /** A cache for the predecessors of a node */
   protected Map<ProcessNode, List<ProcessNode>> predecessorCache =
       new HashMap<ProcessNode, List<ProcessNode>>();
+
   /** A cache for the top level nodes */
   protected LinkedList<ProcessNode> topLevelNodesCache = new LinkedList<ProcessNode>();
+
   /** A cache for the currently visible nodes */
   protected List<ProcessNode> visibleNodesCache = new LinkedList<ProcessNode>();
+
   /**
    * This color will be used to fill the whole background of the model prior to painting (not
    * serialized)
@@ -71,27 +83,37 @@ public abstract class ProcessModel implements Cloneable, Serializable {
   /** A cache for the incoming edges of a node */
   protected Map<ProcessNode, List<ProcessEdge>> precEdgeCache =
       new HashMap<ProcessNode, List<ProcessEdge>>();
+
   // ff added to find the corresponding nodes from outside the class after cloning
   //    protected Map<String, String> idMap;
   //    protected Map<ProcessEdge, ProcessEdge> edgeMap;
   // The id of this process model
   protected String id;
+
   /** The name of the ProcessModel */
   public static final String PROP_PROCESS_NAME = "name";
+
   /** The URI for this model (if applicable) */
   public static final String PROP_PROCESS_URI = "#uri";
+
   /** A field for the owner of this model (if applicable */
   public static final String PROP_EDITOR = "#editor";
+
   /** The creation date of the ProcessModel */
   public static final String PROP_CREATE_DATE = "#creationDate";
+
   /** The author of this ProcessModel */
   public static final String PROP_AUTHOR = "author";
+
   /** A comment for this ProcessModel */
   public static final String PROP_COMMENT = "comment";
+
   /** The source version of this ProcessModel (optional) */
   public static final String PROP_SOURCE_VERSION = "#source_version";
+
   /** An optional property holding the source folder alias */
   public static final String PROP_FOLDERALIAS = "#folder";
+
   /** The last time this model was changed */
   public static final String PROP_LASTCHECKIN = "#LAST_CHECKIN_TIME";
 
@@ -917,7 +939,9 @@ public abstract class ProcessModel implements Cloneable, Serializable {
     }
   }
 
-  /** @param object */
+  /**
+   * @param object
+   */
   public synchronized void removeObject(ProcessObject object) {
     removeObject(object, true);
   }
@@ -933,6 +957,7 @@ public abstract class ProcessModel implements Cloneable, Serializable {
       throw new RuntimeException("Could not remove Object " + object);
     }
   }
+
   /*
    * all relations between objects need to be corrected here
    */

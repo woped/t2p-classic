@@ -16,7 +16,9 @@ public class WordNode extends ProcessNode {
     // TODO Auto-generated constructor stub
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public String getWord() {
     return getText();
   }

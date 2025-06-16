@@ -14,7 +14,9 @@ public class SentenceNode extends Cluster {
   /** */
   public SentenceNode() {}
 
-  /** @param index */
+  /**
+   * @param index
+   */
   public SentenceNode(int index) {
     f_index = index;
   }
@@ -24,7 +26,9 @@ public class SentenceNode extends Cluster {
     super.addProcessNode(word);
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public int getIndex() {
     return f_index;
   }

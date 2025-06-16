@@ -76,7 +76,9 @@ public class TextModelControler extends ProcessUtils {
     }
   }
 
-  /** @param _sn */
+  /**
+   * @param _sn
+   */
   private void highlightComponents(SentenceNode _sn) {
     AnalyzedSentence _sentence = f_analyzer.getAnalyzedSentence(_sn.getIndex());
     List<Action> _actions = _sentence.getExtractedActions();
@@ -309,7 +311,9 @@ public class TextModelControler extends ProcessUtils {
   //		f_processor.analyzeText(true, bpmn); //rebuild process model
   //	}
 
-  /** @param edge */
+  /**
+   * @param edge
+   */
   private void addReferenceToTextAnalyzer(ProcessEdge edge) {
     SpecifiedElement _from = getElement(edge.getSource());
     SpecifiedElement _to = getElement(edge.getTarget());

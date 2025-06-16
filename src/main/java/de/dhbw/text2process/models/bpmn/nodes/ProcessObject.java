@@ -11,8 +11,10 @@ public abstract class ProcessObject extends SerializableProcessObject implements
   public static final String PROP_ID = "#id";
 
   public static final String PROP_CLASS_TYPE = "#type";
+
   /** Flag to hold selection status */
   private boolean selected = false;
+
   /** Stores the list of contexts for this ProcessNode, will not be serialized */
   protected Set<ProcessModel> contexts = new HashSet<ProcessModel>();
 

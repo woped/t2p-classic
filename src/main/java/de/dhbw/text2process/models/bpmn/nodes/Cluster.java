@@ -11,8 +11,10 @@ public abstract class Cluster extends ProcessNode implements Serializable {
 
   /** Property for the contained Nodes of this Cluster */
   public static final String PROP_CONTAINED_NODES = "#nodes";
+
   /** Marks if this cluster is currently collapsed */
   public static final String PROP_COLLAPSED = "collapsed";
+
   /** A list of contained ProcessNodes */
   private List<ProcessNode> containedNodes = new LinkedList<ProcessNode>();
 

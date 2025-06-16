@@ -10,15 +10,19 @@ public class IntermediateEvent extends Event implements AttachedNode {
 
   /** The sub-type of the event. Possible values are "Catching" or "Throwing" * */
   public static final String PROP_EVENT_SUBTYPE = "event_subtype";
+
   /** Catching Intermediate Event */
   public static final String EVENT_SUBTYPE_CATCHING = "Catching";
+
   /** Throwing Intermediate Event */
   public static final String EVENT_SUBTYPE_THROWING = "Throwing";
+
   /** The interruption type of the event. Possible values are "0" or "Throwing" * */
   public static final String PROP_NON_INTERRUPTING = "non_interupting";
 
   public static final String EVENT_NON_INTERRUPTING_FALSE = "0";
   public static final String EVENT_NON_INTERRUPTING_TRUE = "1";
+
   /** The parent node */
   public static final String PROP_SOURCE_NODE = "#source";
 
@@ -66,6 +70,7 @@ public class IntermediateEvent extends Event implements AttachedNode {
       super.setProperty(key, value);
     }
   }
+
   /*@Override
   public List<Class<? extends ProcessNode>> getVariants() {
       List<Class<? extends ProcessNode>> result = new LinkedList<Class<? extends ProcessNode>>();
