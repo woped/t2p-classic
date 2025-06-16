@@ -25,4 +25,7 @@ jobs:
     #needs: semver
     with:
       version: 4.1.0
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       #version: ${{ needs.semver.outputs.VERSION }}
