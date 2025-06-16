@@ -33,7 +33,7 @@ After cloning this repository, it's essential to [set up git hooks](https://gith
 2. Navigate to `http://localhost:8081/t2p/swagger-ui.`
 3. Insert your business process description in the body of the `POST /t2p/generatePNML` endpoint.
 
-### Testing via the embedded GUI
+### Testing via embedded GUI
 1. Start the application.
 2. Navigate to `http://localhost:8081/t2p/`.
 3. Insert your business process description into the second text area and click on `generate`.
