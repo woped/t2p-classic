@@ -196,7 +196,9 @@ public class WordNetWrapper {
     }
   }
 
-  /** @return the acceptedForwardLinkList */
+  /**
+   * @return the acceptedForwardLinkList
+   */
   public static ArrayList<String> getAcceptedForwardLinkList() {
     return acceptedForwardLinkList;
   }
@@ -384,7 +386,9 @@ public class WordNetWrapper {
     return Constants.f_weakVerbs.contains(getBaseForm(v));
   }
 
-  /** @param _tt */
+  /**
+   * @param _tt
+   */
   @SuppressWarnings("unused")
   private static void print(PointerTargetTree _tt) {
     if (_tt.getRootNode() != null) {

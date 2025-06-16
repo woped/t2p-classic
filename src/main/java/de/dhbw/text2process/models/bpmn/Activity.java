@@ -18,12 +18,16 @@ public class Activity extends FlowObject {
   public static final String TYPE_RULE = "RULE";
   public static final String TYPE_USER = "USER";
   public static final String TYPE_REFERENCE = "Reference";
+
   /** Loop-Property: None */
   public static final String LOOP_NONE = "NONE";
+
   /** Loop-Property: Standard */
   public static final String LOOP_STANDARD = "STANDARD";
+
   /** Loop-Property: Multi Instance Sequence */
   public static final String LOOP_MULTI_SEQUENCE = "SEQUENCE";
+
   /** Loop-Property: Mutli Instance Parallel */
   public static final String LOOP_MULTI_PARALLEL = "PARALLEL";
 

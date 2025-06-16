@@ -217,7 +217,9 @@ public class TextToProcess {
     }
   }
 
-  /** @param o */
+  /**
+   * @param o
+   */
   public void textModelElementClicked(ProcessObject o) {
     if (o instanceof SentenceNode) {
       SentenceNode n = (SentenceNode) o;
@@ -242,7 +244,9 @@ public class TextToProcess {
     }
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public TextStatistics getTextStatistics() {
     TextStatistics _result = new TextStatistics();
     _result.setNumberOfSentences(processText.getSize());
@@ -252,12 +256,16 @@ public class TextToProcess {
     return _result;
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public TextAnalyzer getAnalyzer() {
     return f_analyzer;
   }
 
-  /** @param _element */
+  /**
+   * @param _element
+   */
   public void textElementClicked(SpecifiedElement _element) {
     if (_element instanceof Action) {
       FlowObject _corr = f_elementsMap.get(_element);

@@ -49,7 +49,9 @@ public class Text {
 
   private List<String> f_punct = ListUtils.getList(",", ".", "!", "?", "-", "(", ")");
 
-  /** @return */
+  /**
+   * @return
+   */
   public double getAvgSentenceLength() {
     double _result = 0.0;
     for (T2PSentence sent : f_sentences) {

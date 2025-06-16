@@ -32,7 +32,9 @@ public class PrintUtils {
     return toString(node.getLeaves());
   }
 
-  /** @param analyzedSentence */
+  /**
+   * @param analyzedSentence
+   */
   public static void printExtractedActions(AnalyzedSentence analyzedSentence) {
     logger.info(
         "finally identifed actions in ("

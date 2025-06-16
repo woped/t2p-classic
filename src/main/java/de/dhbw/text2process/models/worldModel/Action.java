@@ -87,12 +87,16 @@ public class Action extends SpecifiedElement {
     return _clone;
   }
 
-  /** @return the f_actorFrom */
+  /**
+   * @return the f_actorFrom
+   */
   public Actor getActorFrom() {
     return f_actorFrom;
   }
 
-  /** @return the f_actorTo */
+  /**
+   * @return the f_actorTo
+   */
   public ExtractedObject getObject() {
     return f_object;
   }
@@ -106,12 +110,16 @@ public class Action extends SpecifiedElement {
     return f_baseForm;
   }
 
-  /** @param from the f_actorFrom to set */
+  /**
+   * @param from the f_actorFrom to set
+   */
   public void setActorFrom(Actor from) {
     f_actorFrom = from;
   }
 
-  /** @param to the f_actorTo to set */
+  /**
+   * @param to the f_actorTo to set
+   */
   public void setObject(ExtractedObject to) {
     f_object = to;
   }
@@ -179,7 +187,9 @@ public class Action extends SpecifiedElement {
     return f_aux;
   }
 
-  /** @param marker */
+  /**
+   * @param marker
+   */
   public void setMarker(String marker) {
     f_marker = marker;
   }
@@ -196,7 +206,9 @@ public class Action extends SpecifiedElement {
     return f_mod;
   }
 
-  /** @param negated */
+  /**
+   * @param negated
+   */
   public void setNegated(boolean negated) {
     f_negated = negated;
   }
@@ -261,7 +273,9 @@ public class Action extends SpecifiedElement {
     return f_prt;
   }
 
-  /** @param value */
+  /**
+   * @param value
+   */
   public void setMarkerFromPP(boolean value) {
     f_markerFromPP = value;
   }
@@ -278,7 +292,9 @@ public class Action extends SpecifiedElement {
     return f_linkType;
   }
 
-  /** @param value */
+  /**
+   * @param value
+   */
   public void setTransient(boolean value) {
     f_transient = value;
   }

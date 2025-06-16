@@ -56,7 +56,9 @@ public class WorldModel {
     return f_lastFlowAdded;
   }
 
-  /** @return the f_actions */
+  /**
+   * @return the f_actions
+   */
   public List<Action> getActions() {
     return f_actions;
   }
@@ -75,7 +77,9 @@ public class WorldModel {
     return _result;
   }
 
-  /** @return the f_actors */
+  /**
+   * @return the f_actors
+   */
   public List<Actor> getActors() {
     return f_actors;
   }
@@ -94,7 +98,9 @@ public class WorldModel {
     return _result;
   }
 
-  /** @return the f_resources */
+  /**
+   * @return the f_resources
+   */
   public List<Resource> getResources() {
     return f_resources;
   }
@@ -115,7 +121,9 @@ public class WorldModel {
     return _result;
   }
 
-  /** @return the f_flows */
+  /**
+   * @return the f_flows
+   */
   public ArrayList<Flow> getFlows() {
     return f_flows;
   }
@@ -128,7 +136,9 @@ public class WorldModel {
     f_resources.clear();
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public ArrayList<ExtractedObject> getElements() {
     ArrayList<ExtractedObject> _list = new ArrayList<ExtractedObject>();
     _list.addAll(f_actors);

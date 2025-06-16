@@ -10,14 +10,19 @@ public class ChoreographySubProcess extends Cluster {
 
   /** The property for the name of the upper participant */
   public static final String PROP_UPPER_PARTICIPANTS = "upper_participants";
+
   /** The property for the name of the lower participant */
   public static final String PROP_LOWER_PARTICIPANTS = "lower_participants";
+
   /** The property for the active participant */
   public static final String PROP_ACTIVE_PARTICIPANTS = "active_participants";
+
   /** The property for the loop type: "NONE, STANDARD, MULTIINSTANCE" */
   public static final String PROP_LOOP_TYPE = "loop_type";
+
   /** The property for upper multi instance participants (=FALSE,1=TRUE) */
   public static final String PROP_UPPER_PARTICIPANTS_MULTI = "upper_mi";
+
   /** The property for lower multi instance participants (=FALSE,1=TRUE) */
   public static final String PROP_LOWER_PARTICIPANTS_MULTI = "lower_mi";
 

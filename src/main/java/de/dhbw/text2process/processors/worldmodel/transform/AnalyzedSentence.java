@@ -80,7 +80,9 @@ public class AnalyzedSentence {
     }
   }
 
-  /** @param rootNode */
+  /**
+   * @param rootNode
+   */
   @SuppressWarnings("unused")
   private void filterPRN(Tree rootNode) {
     for (int i = 0; i < rootNode.children().length; i++) {
@@ -271,7 +273,9 @@ public class AnalyzedSentence {
     return _dependenciesFiltered;
   }
 
-  /** @param dependencies */
+  /**
+   * @param dependencies
+   */
   private void extractElements(Tree sentence, Collection<TypedDependency> dependencies) {
     WordNetFunctionality wnf = new WordNetFunctionality();
     logger.debug("-----------------------------------");
@@ -357,7 +361,9 @@ public class AnalyzedSentence {
     }
   }
 
-  /** @param verbs */
+  /**
+   * @param verbs
+   */
   private void removeExamples(List<Action> verbs) {
     for (int i = 0; i < verbs.size(); i++) {
       Action _ac = verbs.get(i);
@@ -979,7 +985,9 @@ public class AnalyzedSentence {
     }
   }
 
-  /** @param list */
+  /**
+   * @param list
+   */
   private void printToConsole(List<TypedDependency> list) {
     for (TypedDependency td : list) {
       logger.debug(td + " - " + SearchUtils.getFullNounPhrase(td.dep()));
@@ -1002,12 +1010,16 @@ public class AnalyzedSentence {
     return f_actions;
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public List<ConjunctionElement> getExtractedConjunctions() {
     return f_conjs;
   }
 
-  /** @param me */
+  /**
+   * @param me
+   */
   public void removeAction(Action me) {
     f_actions.remove(me);
   }

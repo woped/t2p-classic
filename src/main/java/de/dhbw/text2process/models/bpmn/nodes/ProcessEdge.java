@@ -14,16 +14,22 @@ public abstract class ProcessEdge extends ProcessObject {
 
   public static final String PROP_SOURCENODE = "#sourceNode";
   public static final String PROP_TARGETNODE = "#targetNode";
+
   /** The list of intermediate routing points in format x1,y1+x2,y2+x3,y3 */
   public static final String PROP_POINTS = "points";
+
   /** The color of the arc in jawa.awt.Color */
   public static final String PROP_COLOR_ARC = "color_arc";
+
   /** The label of the edge */
   public static final String PROP_LABEL = "label";
+
   /** The offset of the label from the source (in percent as double) */
   public static final String PROP_LABELOFFSET = "#label_offset";
+
   /** The source docking point (offset from source node) */
   public static final String PROP_SOURCE_DOCKPOINT = "#source_dockpoint";
+
   /** The target docking point (offset from target node) */
   public static final String PROP_TARGET_DOCKPOINT = "#target_dockpoint";
 
@@ -124,6 +130,7 @@ public abstract class ProcessEdge extends ProcessObject {
   protected boolean isDockingSupported() {
     return false;
   }
+
   /** removes all routing points of that edge */
   public void clearRoutingPoints() {
     setProperty(PROP_POINTS, "");

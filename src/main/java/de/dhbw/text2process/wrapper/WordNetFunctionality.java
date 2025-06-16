@@ -39,6 +39,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks whether a noun can be a group_action
   public boolean canBeGroupAction(String mainNoun) {
     try {
@@ -49,6 +50,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks wether a thing is a person or a system
   public boolean canBePersonOrSystem(String fullNoun, String mainNoun) {
     try {
@@ -67,6 +69,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks wether a noun is a timeperiod
   public boolean isTimePeriod(String mainNoun) {
     try {
@@ -77,6 +80,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks wether verb is an interaction verb
   public boolean isInteractionVerb(Action a) {
     String _verb = getBaseForm(a.getName());
@@ -104,6 +108,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // derive verb from noun
   public String deriveVerb(String noun) {
     try {
@@ -164,10 +169,12 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks if verb is a weak verb
   public boolean isWeakVerb(String v) {
     return Constants.f_weakVerbs.contains(getBaseForm(v));
   }
+
   // ???
   public boolean isMetaActor(String fullNoun, String noun) {
     logger.debug(
@@ -193,6 +200,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks verbtype
   public boolean isVerbOfType(String verb, String type) {
     try {
@@ -203,6 +211,7 @@ public class WordNetFunctionality {
     }
     return false;
   }
+
   // checks data object
   public boolean canBeDataObject(String fullNoun, String noun) {
     try {

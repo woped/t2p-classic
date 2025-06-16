@@ -8,14 +8,19 @@ public class DataObject extends Artifact implements Linkable {
 
   /** Property if this Data Object is a collection (0=FALSE, 1=TRUE) */
   public static final String PROP_COLLECTION = "collection";
+
   /** Property if this Data Object is Input or Output) */
   public static final String PROP_DATA = "data";
+
   /** Property to hold the state of the DataObject */
   public static final String PROP_STATE = "state";
+
   /** DataObject type is not input/output */
   public static final String DATA_NONE = "";
+
   /** DataObject type is Input */
   public static final String DATA_INPUT = "INPUT";
+
   /** DataObject type is Output */
   public static final String DATA_OUTPUT = "OUTPUT";
 

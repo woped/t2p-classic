@@ -1517,7 +1517,9 @@ public class TextAnalyzer {
     }
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public Text getText() {
     return f_text;
   }
@@ -1547,7 +1549,9 @@ public class TextAnalyzer {
     f_referenceMap.clear();
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public int getNumberOfReferences() {
     int _result = 0;
     for (Actor actor : f_world.getActors()) {
@@ -1559,7 +1563,9 @@ public class TextAnalyzer {
     return _result;
   }
 
-  /** @return */
+  /**
+   * @return
+   */
   public int getNumberOfLinks() {
     int _result = 0;
     for (Action action : f_world.getActions()) {
