@@ -23,7 +23,7 @@ import org.w3c.dom.NodeList;
 
 public class STTextToProcess extends T2PScenarioTest {
 
-  String a, b, c;
+  String a, b;
 
   Logger logger = LoggerFactory.getLogger(STTextToProcess.class);
 
