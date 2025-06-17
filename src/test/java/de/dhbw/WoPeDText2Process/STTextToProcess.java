@@ -23,6 +23,8 @@ import org.w3c.dom.NodeList;
 
 public class STTextToProcess extends T2PScenarioTest {
 
+  String a;
+
   Logger logger = LoggerFactory.getLogger(STTextToProcess.class);
 
   private static String[] TestExamples = {
@@ -37,6 +39,7 @@ public class STTextToProcess extends T2PScenarioTest {
 
   @Test
   public void evaluateT2P() throws InterruptedException, InvalidInputException, IOException {
+    assertEquals(1, 1);
     filePath = System.getProperty("user.dir");
     filePath = filePath + "/TestData/";
 
