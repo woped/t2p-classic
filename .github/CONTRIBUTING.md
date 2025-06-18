@@ -12,7 +12,7 @@ You can follow GitHub's official guide here:
 
 Once forked, clone your forked repository locally and work from there.
 
-## Create a new Branch 
+## Create a new Branch
 
 Before starting any development work, create a new feature branch from the `main` branch.  
 🚫 **Do not develop directly on the `main` branch.**

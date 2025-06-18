@@ -7,6 +7,7 @@ import java.util.List;
 
 public class XORSplit extends PetrinetGateway {
 
+  String a, b, c, d;
   String transID;
   private int choiceCount;
   private String originID;
