@@ -1,4 +1,4 @@
-name: CD Pipeline t2p-classic
+name: CD Pipeline
 
 permissions:
   contents: write
