@@ -1,0 +1,78 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+    - name: Update dependency graph
+      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+                 
+                  - ชื่อ: ตั้งค่า Java JDK
+  การใช้ประโยชน์: การกระทํา/setup-java@v3.14.1
+  กับ:
+    # รุ่นจาวาที่จะตั้งค่า ใช้เวอร์ชัน Java ทั้งหมดหรือเซมเวอร์ ดูตัวอย่างไวยากรณ์ที่รองรับในไฟล์ README
+    เวอร์ชัน Java: # ไม่จําเป็น
+    # เส้นทางสู่ไฟล์ `.java-version` ดูตัวอย่างไวยากรณ์ที่รองรับในไฟล์ README
+    ไฟล์เวอร์ชัน Java: # ไม่จําเป็น
+    # การกระจายชวา ดูรายการการแจกแจงที่รองรับในไฟล์ README
+    การกระจาย: 
+    # ประเภทบรรจุภัณฑ์ (jdk, jre, jdk+fx, jre+fx)
+    java-package: # ไม่จําเป็น ค่าเริ่มต้นคือ jdk
+    # สถาปัตยกรรมของแพคเกจ (ค่าเริ่มต้นสถาปัตยกรรมของนักวิ่งการกระทํา)
+    สถาปัตยกรรม: # ไม่จําเป็น
+    # เส้นทางไปยังตําแหน่งของ JDK ที่ถูกบีบอัด
+    jdkFile: # ไม่จําเป็น
+    # ตั้งค่าตัวเลือกนี้หากคุณต้องการให้การดําเนินการตรวจสอบเวอร์ชันล่าสุดที่มีอยู่ที่ตรงตามข้อกําหนดเวอร์ชัน
+    ตรวจสอบล่าสุด: # ไม่จําเป็น
+    # ID ของพื้นที่เก็บข้อมูล distributionManagement ในไฟล์ pom.xml Default คือ `github`
+    server-id: # ไม่จําเป็น ค่าเริ่มต้นคือ github
+    # ชื่อตัวแปรสภาพแวดล้อมสําหรับชื่อผู้ใช้สําหรับการตรวจสอบสิทธิ์ไปยังพื้นที่เก็บข้อมูล Apache Maven ค่าเริ่มต้นคือ $GITHUB_ACTOR
+    ชื่อผู้ใช้เซิร์ฟเวอร์: # ไม่จําเป็น ค่าเริ่มต้นคือ GITHUB_ACTOR
+    # ชื่อตัวแปรสภาพแวดล้อมสําหรับรหัสผ่านหรือโทเค็นสําหรับการตรวจสอบสิทธิ์ไปยังที่เก็บ Apache Maven ค่าเริ่มต้นคือ $GITHUB_TOKEN
+    รหัสผ่านเซิร์ฟเวอร์: # ไม่จําเป็น ค่าเริ่มต้นคือ GITHUB_TOKEN
+    # เส้นทางไปยังตําแหน่งที่จะเขียนไฟล์การตั้งค่า.xml ค่าเริ่มต้นคือ ~/.m2
+    การตั้งค่า-เส้นทาง: # ไม่จําเป็น
+    # เขียนทับไฟล์การตั้งค่า.xml หากมี ค่าเริ่มต้นคือ "จริง"
+    การตั้งค่าการเขียนทับ: # ไม่จําเป็น ค่าเริ่มต้นเป็นจริง
+    # กุญแจส่วนตัว GPG เพื่อนําเข้า ค่าเริ่มต้นคือสตริงว่าง
+    gpg-private-key: # ตัวเลือก
+    # ชื่อตัวแปรสภาพแวดล้อมสําหรับข้อความรหัสผ่านคีย์ส่วนตัว GPG ค่าเริ่มต้นคือ $GPG_PASSPHRASE
+    gpg-ข้อความรหัสผ่าน: # ไม่จําเป็น
+    # ชื่อของแพลตฟอร์มสร้างเพื่อแคชการพึ่งพา อาจเป็น "maven", "gradle" หรือ "sbt"
+    แคช: # ไม่จําเป็น
+    # วิธีแก้ปัญหาเพื่อผ่านสถานะงานเพื่อโพสต์ขั้นตอนงาน ตัวแปรนี้ไม่ได้มีไว้สําหรับการตั้งค่าด้วยตนเอง
+    สถานะงาน: # ไม่จําเป็น ค่าเริ่มต้นคือ ${{ job.status }}
+    # โทเค็นที่ใช้ในการตรวจสอบสิทธิ์เมื่อดึงข้อมูลเวอร์ชันที่โฮสต์บน github.com เช่นสําหรับ Microsoft Build ของ OpenJDK เมื่อเรียกใช้การดําเนินการนี้บน github.com ค่าเริ่มต้นก็เพียงพอแล้ว เมื่อทํางานบน GHES คุณสามารถส่งโทเค็นการเข้าถึงส่วนบุคคลสําหรับ github.com ได้ หากคุณกําลังประสบปัญหาการจํากัดอัตรา
+    โทเค็น: # ไม่จําเป็น ค่าเริ่มต้นคือ ${{ github.server_url == 'https://github.com' && github.token || '' }}
+    # ชื่อของ Maven Toolchain ID หากไม่ต้องการชื่อเริ่มต้นของ "${distribution}_${java-version}" ดูตัวอย่างไวยากรณ์ที่รองรับในไฟล์การใช้งานขั้นสูง
+    mvn-toolchain-id: # ไม่จําเป็น
+    # ชื่อของผู้จําหน่าย Maven Toolchain หากไม่ต้องการชื่อเริ่มต้นของ "${distribution}" ดูตัวอย่างไวยากรณ์ที่รองรับในไฟล์การใช้งานขั้นสูง
+    mvn-toolchain-ผู้ขาย: # ไม่จําเป็น
+          
